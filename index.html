@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Slovenia iGaming & Crypto Tax Calculator 2026</title>
+    <meta name="description" content="Izračunajte davek na kriptovalute in iGaming dobitke v Sloveniji. FURS informativni kalkulator.">
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background-color: #0f172a; color: #f8fafc; display: flex; justify-content: center; align-items: center; min-height: 100vh; margin: 0; padding: 20px; }
+        .calculator-card { background: #1e293b; padding: 40px; border-radius: 20px; box-shadow: 0 10px 30px rgba(0,255,136,0.1); border: 1px solid #00ff88; max-width: 450px; width: 100%; text-align: center; }
+        .badge { background: rgba(0,255,136,0.1); color: #00ff88; padding: 5px 10px; border-radius: 5px; font-size: 0.8rem; font-weight: bold; letter-spacing: 1px; margin-bottom: 15px; display: inline-block; }
+        h1 { font-size: 1.5rem; color: #fff; margin-bottom: 10px; }
+        p.desc { font-size: 0.9rem; color: #94a3b8; margin-bottom: 30px; line-height: 1.5; }
+        input { width: 85%; padding: 15px; font-size: 1.2rem; background: #0f172a; border: 1px solid #334155; color: #fff; border-radius: 10px; margin-bottom: 20px; outline: none; text-align: center; transition: 0.3s; }
+        input:focus { border-color: #00ff88; box-shadow: 0 0 10px rgba(0,255,136,0.2); }
+        button { width: 100%; padding: 15px; background: #00ff88; color: #0f172a; font-size: 1.1rem; font-weight: bold; border: none; border-radius: 10px; cursor: pointer; transition: 0.3s; }
+        button:hover { background: #00cc6a; transform: translateY(-2px); }
+        .result-box { margin-top: 30px; padding: 20px; background: rgba(15,23,42,0.8); border-radius: 10px; border-left: 4px solid #00ff88; display: none; text-align: left; }
+        .result-box.zero-tax { border-left-color: #3b82f6; }
+        .result-item { margin-bottom: 10px; font-size: 0.95rem; display: flex; justify-content: space-between; border-bottom: 1px solid rgba(255,255,255,0.05); padding-bottom: 5px; }
+        .highlight { color: #00ff88; font-weight: bold; font-size: 1.1rem; }
+        .tax-alert { color: #ff4757; font-weight: bold; font-size: 1.1rem; }
+        .disclaimer { font-size: 0.75rem; color: #64748b; margin-top: 20px; text-align: left; }
+        .backlink { margin-top: 25px; padding-top: 20px; border-top: 1px solid rgba(255,255,255,0.1); }
+        .backlink a { color: #00ff88; text-decoration: none; font-weight: 600; display: inline-block; transition: 0.3s; }
+        .backlink a:hover { color: #fff; transform: scale(1.05); }
+    </style>
+</head>
+<body>
+
+    <div class="calculator-card">
+        <div class="badge">VANTAGEWIN V1.0.1</div>
+        <h1>Slovenia iGaming & Crypto Tax</h1>
+        <p class="desc">Ocenite 10% FURS davek na pretvorbo kriptovalut v fiat (če letno izplačilo preseže 10.000 EUR).</p>
+        
+        <input type="number" id="cryptoAmount" placeholder="Skupna izplačila letos (EUR)" min="0" step="any">
+        <button onclick="calculateCryptoTax()">Izračunaj Davek</button>
+
+        <div class="result-box" id="resultArea">
+            <div id="resultContent"></div>
+        </div>
+
+        <p class="disclaimer">Opozorilo: To orodje je zgolj informativne narave in ne predstavlja uradnega davčnega nasveta.</p>
+
+        <div class="backlink">
+            🔗 Podrobna FURS zakonodaja:<br><br>
+            <a href="https://vantagewin.com/sl/vodici/davek-na-igre-na-sreco-slovenija/" target="_blank" rel="dofollow">Preberite Celoten Vodnik o Davkih</a>
+        </div>
+    </div>
+
+    <script>
+        function calculateCryptoTax() {
+            const threshold = 10000.0;
+            const taxRate = 0.10;
+            
+            let amountInput = document.getElementById('cryptoAmount').value;
+            let amount = parseFloat(amountInput);
+            let resultArea = document.getElementById('resultArea');
+            let resultContent = document.getElementById('resultContent');
+
+            if (isNaN(amount) || amount < 0) {
+                alert("Napaka: Prosimo, vnesite veljaven znesek v evrih.");
+                return;
+            }
+
+            resultArea.style.display = "block";
+
+            if (amount <= threshold) {
+                resultArea.className = "result-box zero-tax";
+                resultContent.innerHTML = `
+                    <div style="color: #3b82f6; font-weight: bold; margin-bottom: 15px;">✅ Pod mejo obdavčitve</div>
+                    <div class="result-item"><span>Skupna izplačila:</span> <span>${amount.toFixed(2)} €</span></div>
+                    <div class="result-item"><span>Neobdavčena meja:</span> <span>${threshold.toFixed(2)} €</span></div>
+                    <div class="result-item" style="border: none; margin-top: 10px;"><span>Davek za plačilo:</span> <span class="highlight">0.00 € (0%)</span></div>
+                `;
+            } else {
+                let taxableAmount = amount - threshold;
+                let taxOwed = taxableAmount * taxRate;
+                
+                resultArea.className = "result-box";
+                resultContent.innerHTML = `
+                    <div style="color: #ff4757; font-weight: bold; margin-bottom: 15px;">⚠️ Presegli ste mejo 10.000 EUR</div>
+                    <div class="result-item"><span>Skupna izplačila:</span> <span>${amount.toFixed(2)} €</span></div>
+                    <div class="result-item"><span>Neobdavčena meja:</span> <span>-${threshold.toFixed(2)} €</span></div>
+                    <div class="result-item"><span>Obdavčljiva osnova:</span> <span>${taxableAmount.toFixed(2)} €</span></div>
+                    <div class="result-item" style="border: none; margin-top: 10px;"><span>Ocenjen davek (10%):</span> <span class="tax-alert">${taxOwed.toFixed(2)} €</span></div>
+                `;
+            }
+        }
+    </script>
+</body>
+</html>
